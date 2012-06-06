@@ -1,0 +1,161 @@
+#!/bin/bash
+# FILE : bbgallery - Visit http://bashscripts.org for more scripts.
+# Function: Creates a photogallery of .jpg images in the directory.
+#       Copyright (C) 2010 Dave Crouse <crouse@usalug.net>
+#
+#       This program is free software: you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation, either version 3 of the License, or
+#       (at your option) any later version.
+#
+#       This program is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#       GNU General Public License for more details.
+#
+#       You should have received a copy of the GNU General Public License
+#       along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+clear
+echo "--------------------------------------------------"
+echo "   BBIPS - Bash Batch Image Processing Scripts"
+echo "BBGALLERY - A bbips image gallery creation script"
+echo "--------------------------------------------------"
+
+# Input the gallery name that will be displayed on the webpage.
+read -p "Please enter a name for the gallery: " galleryname
+echo " "
+echo " "
+echo "Now we need information regarding color scheme"
+echo "We will need color for the background of the webpage"
+echo "and the color of the borders around the images,"
+echo "and text underneath the images."
+echo " "
+echo "Please visit http://www.imagemagick.org/script/color.php for colornames."
+echo "There are 674 color names available for use with this script !"
+echo " "
+read -p "Please enter a color for the webpage background: " backgroundcolor
+read -p "Please enter a color for the borders around the images: " bordercolor
+read -p "Please enter a color for the text underneath the images: " textcolor
+echo " "
+
+# You can modify the script to run without input by setting the variables below
+# and commenting out the above input lines. Replace the xxxx with the color desired.
+# galleryname="xxxxxxxxx"
+# backgroundcolor="xxxxxxx"
+# bordercolor="xxxxxxxxxx"
+# textcolor="xxxxxxxx"
+
+
+# Create thumbnail gallery
+echo "Thumbnail creation starting"
+mkdir thumbnails
+sleep 1
+echo "Thumbnail directory has been created"
+sleep 1
+for i in *[.jpg,.JPG] ;
+do convert -size 120x120 ${i} -resize 120x120 -quality 100 tn_${i};
+mv tn_${i} thumbnails/${i} ;
+echo "Creating thumbnail ${i} " ;
+done
+echo "All thumbnails created"
+echo "Creating borders on all images"
+cd thumbnails
+for i in *[.jpg,.JPG] ;
+do convert -bordercolor ${bordercolor} -border 2x2 ${i} ${i}
+echo "Border put on image ${i} " ;
+done
+echo "Borders created on all images"
+cd ..
+
+# Create the index.html file.
+echo "Creating index file"
+echo "<html>" >> index.html
+echo "<head>" >> index.html
+echo "<title>${galleryname} ................ Created using BBGALLERY. </title>" >> index.html
+echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">" >> index.html
+echo "<meta http-equiv=\"Content-Style-Type\" content=\"text/css\">" >> index.html
+echo "<meta name=\"Author\" content=\"http://www.bbips.org\">" >> index.html
+echo "<meta name=\"generator\" content=\"Created by the Bash Batch Image Processing Script - BBGALLERY\">" >> index.html
+echo "<meta name=\"robots\" content=\"all\">" >> index.html
+echo "<meta name=\"revisit-after\" content=\"15 days\">" >> index.html
+echo "<meta name=\"MSSmartTagsPreventParsing\" content=\"true\">" >> index.html
+echo "<meta name=\"description\" content=\"BBIPS - a Bash Batch Image Processing Scripts.\">" >> index.html
+echo "<meta name=\"keywords\" content=\"USA, LUG, Forum, usalug, Linux, bbips, bash, bashscripts.org, bbips.org, usalug.org \">" >> index.html
+echo "   <script language=\"Javascript\">" >> index.html
+echo "   function BBgalleryPic(BBPicURL) {" >> index.html
+echo "     window.open(\"show.html?\"+BBPicURL, \"\", " >> index.html
+echo "     \"resizable=1,HEIGHT=200,WIDTH=200\");" >> index.html
+echo "   }" >> index.html
+echo "   </script> " >> index.html
+echo "</head>" >> index.html
+echo "<body bgcolor='${backgroundcolor}' link='${textcolor}' vlink='${textcolor}' text='${textcolor}'><center>" >> index.html
+echo "<br>" >> index.html
+echo "<h3>${galleryname}</h3>"  >> index.html
+echo "<table cellpadding='3' cellspacing='5'>" >> index.html
+echo "<tr>" >> index.html
+
+# Create the table of images
+count=0
+for badname in *[.jpg,.JPG] ;
+do
+  if [ $count -eq 5 ] ; then
+    echo "</td>"  >> index.html
+    echo "</tr>"  >> index.html
+echo " "  >> index.html
+    echo "<tr>"  >> index.html
+    echo "<td align='center'>"  >> index.html
+    count=1
+  else
+    echo "</td>"  >> index.html
+    echo "<td align='center'>"  >> index.html
+    count=$(( $count + 1 ))
+  fi
+rename="$(echo ${badname} | sed 's/.jpg//;s/-/ /g')"
+echo "   <a href=\"javascript:BBgalleryPic('${badname}')\"><img style='padding:2px' src='thumbnails/${badname}' border='0'></a>" >> index.html
+echo "   <br>" >> index.html
+echo "<font size=-3>${rename}</font>" >> index.html
+done
+echo "</td>"  >> index.html
+echo "</tr>"  >> index.html
+echo "</table>"  >> index.html
+echo "<br>" >> index.html
+echo "<br>" >> index.html
+echo "<br>" >> index.html
+echo "<font size=-5>Gallery created on " >> index.html;  date '+%D' >> index.html
+echo "<br>" >> index.html
+echo " using <a href=\"http://bashscripts.org\">BBGALLERY</a> version 2.0" >> index.html
+echo "</font></center>" >> index.html
+echo "</body>" >> index.html
+
+# Create the show.html file.
+echo "<HTML>" >> show.html
+echo "<HEAD>" >> show.html
+echo " <TITLE>BBGALLERY Image Window</TITLE>" >> show.html
+echo " <script language='javascript'>" >> show.html
+echo "   var arrTemp=self.location.href.split(\"?\");" >> show.html
+echo "   var BBpicUrl = (arrTemp.length>0)?arrTemp[1]:\"\";" >> show.html
+echo "   var NS = (navigator.appName==\"Netscape\")?true:false;" >> show.html
+echo " " >> show.html
+echo "     function BBresizePic() {" >> show.html
+echo "       iWidth = (NS)?window.innerWidth:document.body.clientWidth;" >> show.html
+echo "       iHeight = (NS)?window.innerHeight:document.body.clientHeight;" >> show.html
+echo "       iWidth = document.images[0].width - iWidth;" >> show.html
+echo "       iHeight = document.images[0].height - iHeight;" >> show.html
+echo "       window.resizeBy(iWidth, iHeight);" >> show.html
+echo "       self.focus();" >> show.html
+echo "     };" >> show.html
+echo " </script>" >> show.html
+echo "</HEAD>" >> show.html
+echo "<BODY bgcolor=\"#000000\" onload='BBresizePic();' topmargin=\"0\"  " >> show.html
+echo "marginheight=\"0\" leftmargin=\"0\" marginwidth=\"0\">" >> show.html
+echo " <script language='javascript'>" >> show.html
+echo " document.write( \"<img src='\" + BBpicUrl + \"' border=0>\" );" >> show.html
+echo " </script>" >> show.html
+echo "</BODY>" >> show.html
+echo "</HTML>" >> show.html
+echo "Image Gallery Created Successfully"
+#echo "Launching Firefox in 5 seconds: " ;sleep 5;
+#firefox index.html
+chmod 755 index.html show.html;chmod -R 755 thumbnails/
+exit 0
