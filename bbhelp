@@ -1,0 +1,41 @@
+#!/bin/bash
+# FILE: bbhelp
+# Copyright (C) 2006-2012 Dave Crouse <crouse@usalug.net>
+
+clear
+echo " ";
+tput smso; echo "BBIPS command line utility help" ; 
+echo "";
+echo "WARNING - most bbips commands work DIRECTLEY on your images !!!";tput rmso;
+echo "It is recommended that you work on jpg COPIES ONLY to prevent loss of originals.";
+echo "";
+echo "bbcopy | Create a directory and COPY all images into it.";
+echo "bbhelp | This lists the bbips command alias's";
+echo "------------------";
+echo "bbrename | Renames any .JPG .jpeg .JPEG files to .jpg to work with bbips scripts.";
+echo "bbindex | Creates a index.jpg of all .jpg (not .JPG) files.";
+echo "bbgzip | Creates a GZIPped file containing all the images.";
+echo "------------------";
+echo "bbresize | RESIZEs all images width x height";
+echo "bbrotate | ROTATEs all images clockwise x number of degrees";
+echo "bbflip | FLIPs images top to bottom vertically.";
+echo "bbflop | FLOPs images side to side horizontally.";
+echo "bbatxt | ADDS TEXT to images.";
+echo "------------------";
+echo "bbborder | Creates a border on all images color x size";
+echo "bbgrayscale | Converts images to Black and White";
+echo "bbsepia | Converts all images to SEPIA toned x percentage";
+echo "bbpaint | Simulates an oil painting on all images";
+echo "bbnormalize | Normalizes all images";
+echo "bbcolorize | Colorizes all images. Format rgb.";
+echo "bbgamma | Gamma correct for all images";
+echo "bbsolarize | Solorizes all images. ";
+echo "------------------";
+echo "bbapcom | APpend COMments to the images.";
+echo "bbrecom | Displays (REads) COMments on all images.";
+echo "bbwrcom | WRites COMments to all images, overwriting any existing comments."
+echo "		";
+echo "		Comments/Suggestions/Bugfixes to <crouse@usalug.net>";
+echo "		USA Linux Users Group - http://usalug.org";
+echo "		";
+exit 0

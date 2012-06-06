@@ -1,0 +1,38 @@
+#!/bin/bash
+# FILE : bbrotate
+# Function: Rotate all .jpg images in a directory. Specify clockwise rotation.
+# Copyright (C) 2006-2012 Dave Crouse <crouse@usalug.net>
+# ------------------------------------------------------------------------ #
+if [[ $1 = "--help" || $1 = "-h" || $1 = "help" ]]; then
+       	echo "		Function: Rotate all .jpg images in a directory. Specify clockwise rotation."; 
+	echo "		Usage: $0 rotationindegrees";
+   	echo "		Requires: Imagemagick";
+     	echo "		EXAMPLE: $0 90";
+	echo "		This would rotate images 90 degrees clockwise.";
+	echo "		Note: rotation variable MUST be numeric ! ";   
+ 	echo "		";
+   	echo "		Comments/Suggestions/Bugfixes to <crouse@usalug.net>";
+   	echo "		USA Linux Users Group - http://usalug.org";
+   	echo "		";
+exit 0
+fi
+
+if [[ -z $( type -p convert ) ]]; then echo -e "ImageMagick -- NOT INSTALLED !";exit ;fi
+    
+if [[ -z "$1" || $1 = *[^0-9]* ]] ; then
+	echo " ";
+	echo "		######### COMMAND FAILED ########## ";
+	echo "		USAGE: $0 rotationindegrees";
+	echo "		EXAMPLE: $0 90";
+	echo "		This would rotate images 90 degrees clockwise.";
+	echo "		Note: rotation variable MUST be numeric ! ";
+	echo "		######### COMMAND FAILED ########## ";echo " ";
+else
+
+export IFS=$'\n';
+for i in $(find . -maxdepth 1 -type f -iname "*.jpg");
+do
+echo "Rotating ${i:2} $1 degrees." ;convert -rotate $1 ${i:2} new_${i:2}; mv new_${i:2} ${i:2} ;
+done
+fi
+exit 0

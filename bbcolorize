@@ -1,0 +1,74 @@
+#!/bin/bash
+# FILE : bbcolorize
+# Function: Converts all .jpg images in the directory to colorized.
+# Copyright (C) 2006-2012 Dave Crouse <crouse@usalug.net>
+# ------------------------------------------------------------------------ #
+if [[ $1 = "--help" || $1 = "-h" || $1 = "help" ]]; then
+       	echo "		Function: Converts all .jpg images in the directory to colorized."; 
+	echo "		USAGE: $0 red% green% blue%";
+   	echo "		Requires: Imagemagick";  
+       	echo "		EXAMPLE: $0 0 50 50";
+	echo "		";
+	echo "		Specify the amount of colorization as a percentage. ";
+	echo "		You can apply separate colorization values to the red, ";
+	echo "		green, and blue channels of the image with a colorization ";
+	echo "		value.";
+	echo "		";
+	echo "		0=normal";
+	echo "		50=50% REMOVED";
+	echo "		99=99% REMOVED";
+	echo "		";
+	echo "		";
+	echo "		Colorization value for red 0-99 is the firt variable.";
+	echo "		Colorization value for green 0-99 is the second variable.";
+	echo "		Colorization value for blue 0-99 is the third variable.";
+	echo "		";
+	echo "		IE: If you make red=0 green=50 and blue=0, then 50% of the green ";
+	echo "		will be REMOVED, and the red and blue channels left normal, which ";
+	echo "		will leave more red and blue, making the image more purple.";
+	echo "		";
+   	echo "		Comments/Suggestions/Bugfixes to <crouse@usalug.net>";
+   	echo "		USA Linux Users Group - http://usalug.org";
+   	echo "		";
+exit 0
+fi
+
+if [[ -z $( type -p convert ) ]]; then echo -e "ImageMagick -- NOT INSTALLED !";exit ;fi
+
+if [[ -z "$1" || -z "$2" || -z "$3" ]]; then
+	echo " ";
+	echo "		######### COMMAND FAILED ########## ";
+	echo "		USAGE: $0 red% green% blue%";
+	echo "		EXAMPLE: $0 0 50 50";
+	echo "		";
+	echo "		Specify the amount of colorization as a percentage. ";
+	echo "		You can apply separate colorization values to the red, ";
+	echo "		green, and blue channels of the image with a colorization ";
+	echo "		value.";
+	echo "		";
+	echo "		0=normal";
+	echo "		50=50% REMOVED";
+	echo "		99=99% REMOVED";
+	echo "		";
+	echo "		";
+	echo "		Colorization value for red 0-99 is the firt variable.";
+	echo "		Colorization value for green 0-99 is the second variable.";
+	echo "		Colorization value for blue 0-99 is the third variable.";
+	echo "		";
+	echo "		IE: If you make red=0 green=50 and blue=0, then 50% of the green ";
+	echo "		will be REMOVED, and the red and blue channels left normal, which ";
+	echo "		will leave more red and blue, making the image more purple.";
+	echo "		";
+	echo "		######### COMMAND FAILED ########## ";echo " ";
+	exit
+else
+
+export IFS=$'\n';
+for i in $(find . -maxdepth 1 -type f -iname "*.jpg");
+do 
+convert -colorize $1,$2,$3 ${i:2} _${i:2};
+mv _${i:2} ${i:2}
+echo "Colorized image ${i:2}" ;
+done
+fi
+exit 0

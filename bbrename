@@ -1,0 +1,23 @@
+#!/bin/bash
+# FILE : bbrename
+# Function: Renames any .JPG .jpeg .JPEG files to .jpg to work with bbips scripts.
+# Copyright (C) 2006-2012 Dave Crouse <crouse@usalug.net>
+# ------------------------------------------------------------------------ #
+if [[ $1 = "--help" || $1 = "-h" || $1 = "help" ]]; then
+       	echo "		Function: Renames any .JPG .jpeg .JPEG files to .jpg to work with bbips scripts."; 
+	echo "		Usage: $0";
+   	echo "		Requires: rename"; 
+    	echo "		";
+   	echo "		Comments/Suggestions/Bugfixes to <crouse@usalug.net>";
+   	echo "		USA Linux Users Group - http://usalug.org";
+   	echo "		";
+exit 0
+fi
+
+if [[ -z $( type -p rename ) ]]; then echo -e "rename -- NOT INSTALLED !";exit ;fi
+
+export IFS=$'\n';
+rename .JPG .jpg *JPG
+rename .JEPG .jpg *JEPG
+rename .jpeg .jpg *jpeg
+exit 0

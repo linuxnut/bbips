@@ -1,0 +1,26 @@
+#!/bin/bash
+# FILE : bbrecom
+# Function: Reads all the comments of all .jpg images in the directory.
+# Copyright (C) 2006-2012 Dave Crouse <crouse@usalug.net>
+# ------------------------------------------------------------------------ #
+if [[ $1 = "--help" || $1 = "-h" || $1 = "help" ]]; then
+       	echo "		Function: Reads all the comments of all .jpg images in the directory."; 
+	echo "		Usage: $0 ";
+   	echo "		Requires: rdjpgcom";
+        echo "		";
+   	echo "		Comments/Suggestions/Bugfixes to <crouse@usalug.net>";
+   	echo "		USA Linux Users Group - http://usalug.org";
+   	echo "		";
+exit 0
+fi
+
+if [[ -z $( type -p rdjpgcom ) ]]; then echo -e "The program rdjpgcom -- NOT INSTALLED !";exit ;fi
+
+export IFS=$'\n';
+for i in $(find . -maxdepth 1 -type f -iname "*.jpg");
+do
+echo "Comments for ${i:2}" >> /tmp/bbrecom; echo "-----------" >> /tmp/bbrecom; rdjpgcom ${i:2} >> /tmp/bbrecom; echo "-----------" >> /tmp/bbrecom; 
+echo "" >> /tmp/bbrecom; echo "" >> /tmp/bbrecom; 
+done
+less /tmp/bbrecom ; rm -f /tmp/bbrecom
+exit 0

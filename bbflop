@@ -1,0 +1,25 @@
+#!/bin/bash
+# FILE : bbflop
+# Function: Flops all .jpg images in a directory. Creates mirror image Left-Right.
+# Copyright (C) 2006-2012 Dave Crouse <crouse@usalug.net>
+# ------------------------------------------------------------------------ #
+if [[ $1 = "--help" || $1 = "-h" || $1 = "help" ]]; then
+       	echo "		Function: Flops all .jpg images in a directory. Creates mirror image Left-Right."; 
+	echo "		Usage: $0 ";
+   	echo "		Requires: Imagemagick";
+        echo "		";
+   	echo "		Comments/Suggestions/Bugfixes to <crouse@usalug.net>";
+   	echo "		USA Linux Users Group - http://usalug.org";
+   	echo "		";
+exit 0
+fi
+
+if [[ -z $( type -p convert ) ]]; then echo -e "ImageMagick -- NOT INSTALLED !";exit ;fi
+
+export IFS=$'\n';
+for i in $(find . -maxdepth 1 -type f -iname "*.jpg");
+do
+echo "Flopping ${i:2}"
+convert -flop ${i:2} new_${i:2}; mv new_${i:2} ${i:2}
+done
+exit 0

@@ -1,0 +1,46 @@
+#!/bin/bash
+# FILE : bbgamma
+# Function: Gamma correct all .jpg images in the directory.
+# 	    Will either lighten or darken an image depending on the amount of gamma correction required.
+#           The same color image displayed on two different workstations may look different due to differences 
+#           in the display monitor. Use gamma correction to adjust for this color difference. Reasonable values 
+#           extend from 0.8 to 2.3. Gamma less than 1.0 darkens the image and gamma greater than 1.0 lightens it.
+# Copyright (C) 2006-2012 Dave Crouse <crouse@usalug.net>
+# ------------------------------------------------------------------------ #
+if [[ $1 = "--help" || $1 = "-h" || $1 = "help" ]]; then
+       	echo "		Function: Gamma correct all .jpg images in the directory.";
+       	echo "		Will either lighten or darken an image depending on the amount of gamma correction required.";
+       	echo "		The same color image displayed on two different workstations may look different due to differences ";
+       	echo "		in the display monitor. Use gamma correction to adjust for this color difference. Reasonable values ";
+       	echo "		extend from 0.8 to 2.3. Gamma less than 1.0 darkens the image and gamma greater than 1.0 lightens it.";
+	echo "		Usage: $0 gamma_number";
+   	echo "		Requires: Imagemagick";
+        echo "		EXAMPLE: $0 2.0";
+	echo "		Specify the value between (0.8 - 2.3) 0.8 creating darker images, 2.3 creating lighter images.";
+	echo "		";
+   	echo "		Comments/Suggestions/Bugfixes to <crouse@usalug.net>";
+   	echo "		USA Linux Users Group - http://usalug.org";
+   	echo "		";
+exit 0
+fi
+
+if [[ -z $( type -p convert ) ]]; then echo -e "ImageMagick -- NOT INSTALLED !";exit ;fi
+
+if [ -z "$1" ] ; then
+	echo " ";
+	echo "		######### COMMAND FAILED ########## ";
+	echo "		USAGE: $0 gamma_number";
+	echo "		EXAMPLE: $0 2.0";
+	echo "		Specify the value between (0.8 - 2.3) 0.8 creating darker images, 2.3 creating lighter images.";
+	echo "		######### COMMAND FAILED ########## ";echo " ";
+else
+
+export IFS=$'\n';
+for i in $(find . -maxdepth 1 -type f -iname "*.jpg");
+do
+convert -gamma $1 ${i:2} _${i:2};
+mv _${i:2} ${i:2}
+echo "Gamma corrected image ${i:2}" ;
+done
+fi
+exit 0

@@ -1,0 +1,40 @@
+#!/bin/bash
+# FILE : bbsepia
+# Function: Converts all .jpg images in the directory to a Sepia Tone (Look old)
+# Copyright (C) 2006-2012 Dave Crouse <crouse@usalug.net>
+# ------------------------------------------------------------------------ #
+if [[ $1 = "--help" || $1 = "-h" || $1 = "help" ]]; then
+       	echo "		Function: Converts all .jpg images in the directory to a Sepia Tone (Look old)"; 
+	echo "		Usage: $0 sepiapercentoftone";
+   	echo "		Requires: Imagemagick"; 
+   	echo "		EXAMPLE: $0 70";
+	echo "		This would give a normal sepia tone.";
+	echo "		0 to 100 are available options, but 70 is good ;) ";
+	echo "		Note: sepia variable MUST be numeric ! ";    
+ 	echo "		";
+   	echo "		Comments/Suggestions/Bugfixes to <crouse@usalug.net>";
+   	echo "		USA Linux Users Group - http://usalug.org";
+   	echo "		";
+exit 0
+fi
+
+if [[ -z $( type -p convert ) ]]; then echo -e "ImageMagick -- NOT INSTALLED !";exit ;fi
+
+if [[ -z "$1" || $1 = *[^0-9]* ]] ; then
+	echo " ";
+	echo "		######### COMMAND FAILED ########## ";
+	echo "		USAGE: $0 sepiapercentoftone";
+	echo "		EXAMPLE: $0 70";
+	echo "		This would give a normal sepia tone.";
+	echo "		0 to 100 are available options, but 70 is good ;) ";
+	echo "		Note: sepia variable MUST be numeric ! ";
+	echo "		######### COMMAND FAILED ########## ";echo " ";
+else
+
+export IFS=$'\n';
+for i in $(find . -maxdepth 1 -type f -iname "*.jpg");
+do
+echo "Converting ${i:2} to Sepia Tone"; convert ${i:2} -sepia-tone ${1}% new_${i:2}; mv new_${i:2} ${i:2}
+done
+fi
+exit 0

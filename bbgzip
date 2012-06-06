@@ -1,0 +1,27 @@
+#!/bin/bash
+# FILE : bbgzip
+# Function: Creates a gzipped tar file of all .jpg images in the directory.
+# Copyright (C) 2006-2012 Dave Crouse <crouse@usalug.net>
+# ------------------------------------------------------------------------ # 
+if [[ $1 = "--help" || $1 = "-h" || $1 = "help" ]]; then
+      	echo "		Function: Creates a gzipped tar file of all .jpg images in the directory."; 
+	echo "		Usage: $0"; 
+        echo "		";
+   	echo "		Comments/Suggestions/Bugfixes to <crouse@usalug.net>";
+   	echo "		USA Linux Users Group - http://usalug.org";
+   	echo "		";
+exit 0
+fi
+   
+bigpath=`pwd`
+backupname=`basename $bigpath`
+export IFS=$'\n';
+tar -cvf $backupname.jpegs.tar $(find . -maxdepth 1 -type f -iname "*.jpg");
+gzip $backupname.jpegs.tar
+exit 0
+
+
+
+
+
+

@@ -1,0 +1,37 @@
+#!/bin/bash
+# FILE : bbshot
+# Function: Takes a screenshot with a 5 second delay.
+# Copyright (C) 2006-2012 Dave Crouse <crouse@usalug.net>
+# ------------------------------------------------------------------------ #
+if [[ $1 = "--help" || $1 = "-h" || $1 = "help" ]]; then
+       	echo "		Function: Takes a screenshot with a 5 second (default) delay."; 
+	echo "		Usage: $0";
+   	echo "		Requires: Imagemagick"; 
+	echo "		EXAMPLE: $0 snapshot1.jpg 2";
+	echo "		Saves snapshot1.jpg to current directory and has a 2 second delay.";
+	echo "		Using no delay variable will delay shot for 5 seconds.";
+	echo "		Using no name variable will delay shot for 5 seconds, and give a default name of bbshot.jpg.";
+    	echo "		";
+   	echo "		Comments/Suggestions/Bugfixes to <crouse@usalug.net>";
+   	echo "		USA Linux Users Group - http://usalug.org";
+   	echo "		";
+exit 0
+fi
+
+if [[ -z $( type -p convert ) ]]; then echo -e "Imagemagick -- NOT INSTALLED !";exit ;fi
+
+if [ -z "$1" ] ; then
+import -window root -snaps 1 -pause 5 bbshot.jpg ;
+exit 0
+fi
+
+if [ -z "$2" ] ; then
+import -window root -snaps 1 -pause 5 ${1}.jpg ;
+exit 0
+fi
+
+export IFS=$'\n';
+import -window root -snaps 1 -pause ${2} ${1}.jpg
+exit 0
+
+
